@@ -514,14 +514,21 @@ void TVout::draw_rect(uint8_t x0, uint8_t y0, uint8_t w, uint8_t h, char c, char
  * Arguments:
  *	x,y:
  *		The x,y coordinates of the three points of the triangle
+ *		x1,y1 is top point
  *	c:
  *		The color of the triange lines.
  *		(see color note at the top of this file)
  *	fc:
  *		The fill color of the triangle..not sure how to do this yet
 */
-void TVout::draw_tri(uint8_t x1, uint8_t y1, uint8_t x2, uint8_t y2, uint8_t x3, uint8_t y3, char c) {
-
+void TVout::draw_tri(uint8_t x1, uint8_t y1, uint8_t x2, uint8_t y2, uint8_t x3, uint8_t y3, char c, char fc) {
+	float xrow0 = (x1 + (((y1-i)*(x1-x3))/(y1+y3)))
+	float xrow1 = (x1 + (((y1-i)*(x1-x2))/(y1+y2)))
+	
+	if (fc != -1) {
+		for (unsigned char i = y1; i < (min(y2, y3)); i--)
+			draw_row(i,xrow0,xrow1,fc);
+	}
 	draw_line(x1,y2,x2,y2,c);
 	draw_line(x2,y2,x3,y3,c);
 	draw_line(x3,y3,x1,y1,c);
