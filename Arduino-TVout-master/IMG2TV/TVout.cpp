@@ -509,6 +509,23 @@ void TVout::draw_rect(uint8_t x0, uint8_t y0, uint8_t w, uint8_t h, char c, char
 	draw_line(x0,y0+h,x0+w,y0+h,c);
 } // end of draw_rect
 
+/* draw a triange with points x1,y1; x2,y2; x3,y3 
+ * 
+ * Arguments:
+ *	x,y:
+ *		The x,y coordinates of the three points of the triangle
+ *	c:
+ *		The color of the triange lines.
+ *		(see color note at the top of this file)
+ *	fc:
+ *		The fill color of the triangle..not sure how to do this yet
+*/
+void TVout::draw_tri(uint8_t x1, uint8_t y1, uint8_t x2, uint8_t y2, uint8_t x3, uint8_t y3, char c) {
+
+	draw_line(x1,y2,x2,y2,c);
+	draw_line(x2,y2,x3,y3,c);
+	draw_line(x3,y3,x1,y1,c);
+} // end of draw_tri
 
 /* draw a circle given a coordinate x,y and radius both filled and non filled.
  *
