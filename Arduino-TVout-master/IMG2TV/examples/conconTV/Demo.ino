@@ -48,7 +48,7 @@ int t1y1 = 10;
 int t1x2 = 10;
 int t1y2 = 90;
 int t1x3 = 80;    //For now, picked consant. Should aim for values between 80 - 100
-int t1y3 = (t1y1+(potRead*(t1y2/1023)));   //Should aim for values between t1y1 and t1y2
+int t1y3 = int((t1y1+(potRead*(t1y2/1023))));   //Should aim for values between t1y1 and t1y2
 
 
   
