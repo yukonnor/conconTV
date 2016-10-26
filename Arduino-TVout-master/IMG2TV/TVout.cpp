@@ -529,9 +529,9 @@ void TVout::draw_tri(uint8_t x1, uint8_t y1, uint8_t x2, uint8_t y2, uint8_t x3,
 		for (unsigned char i = y1; i < (min(y2, y3)); i--)
 			draw_row(i,xrow0,xrow1,fc);
 	}
-	draw_line(x1,y2,x2,y2,c);
+	draw_line(x1,y1,x2,y2,c);
 	draw_line(x2,y2,x3,y3,c);
-	draw_line(x3,y3,x1,y1,c);
+	draw_line(x1,y1,x3,y3,c);
 } // end of draw_tri
 
 /* draw a circle given a coordinate x,y and radius both filled and non filled.
