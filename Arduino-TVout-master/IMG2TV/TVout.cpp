@@ -526,9 +526,9 @@ void TVout::draw_tri(uint8_t x1, uint8_t y1, uint8_t x2, uint8_t y2, uint8_t x3,
 	float xrow0 = (x1 + (((y1-i)*(x1-x3))/(y1+y3)));
 	float xrow1 = (x1 + (((y1-i)*(x1-x2))/(y1+y2)));
 	
-	if (fc != -1) {
+	/*if (fc != -1) {
 		for (i; i < (min(y2, y3)); i--)
-			draw_row(i,xrow0,xrow1,fc);
+			draw_row(i,xrow0,xrow1,fc);*/
 	}
 	draw_line(x1,y1,x2,y2,c);
 	draw_line(x2,y2,x3,y3,c);
