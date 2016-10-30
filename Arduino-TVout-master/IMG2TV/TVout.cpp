@@ -522,7 +522,7 @@ void TVout::draw_rect(uint8_t x0, uint8_t y0, uint8_t w, uint8_t h, char c, char
  *		The fill color of the triangle..not sure how to do this yet
 */
 
-/*void TVout::draw_tri(uint8_t x1, uint8_t y1, uint8_t x2, uint8_t y2, uint8_t x3, uint8_t y3, char c, char fc) {
+void TVout::draw_tri(uint8_t x1, uint8_t y1, uint8_t x2, uint8_t y2, uint8_t x3, uint8_t y3, char c, char fc) {
 	unsigned char i = y1;
 	float xrow0 = (x1 + (((y1-i)*(x1-x3))/(y1+y3)));
 	float xrow1 = (x1 + (((y1-i)*(x1-x2))/(y1+y2)));
@@ -535,7 +535,41 @@ void TVout::draw_rect(uint8_t x0, uint8_t y0, uint8_t w, uint8_t h, char c, char
 	draw_line(x2,y2,x3,y3,c);
 	draw_line(x1,y1,x3,y3,c);
 } // end of draw_tri
+
+/* equi_tri: draw an equilateral triange with center point x,y and side length l
+ * 
+ * Arguments:
+ *	x,y:
+ *		The x,y coordinates of centerpoint of the equi triangle
+ *    
+ *      s:      The length of sides of the equilateral triangle
+ *	c:
+ *		The color of the triange lines.
+ *		(see color note at the top of this file)
+ *	fc:
+ *		The fill color of the triangle..not sure how to do this yet
 */
+
+void TVout::equi_tri(uint8_t x, uint8_t y, uint8_t s, char c, char fc) {
+	/*unsigned char i = y1;
+	float xrow0 = (x1 + (((y1-i)*(x1-x3))/(y1+y3)));
+	float xrow1 = (x1 + (((y1-i)*(x1-x2))/(y1+y2)));
+	
+	if (fc != -1) {
+		for (i; i < (min(y2, y3)); i--)
+			draw_row(i,xrow0,xrow1,fc);
+	}*/ //COmmenting out 'fill'
+	x1 = (x-(s/2))
+	y1 = (y-(s/(2*sqrt(3))))
+	x2 = (x+(s/2))
+	y2 = (y-(s/(2*sqrt(3))))
+	x3 = x
+	y3 = (y+(2*(s/(2*sqrt(3)))))
+		
+  	draw_line(x1,y1,x2,y2,c);
+	draw_line(x2,y2,x3,y3,c);
+	draw_line(x1,y1,x3,y3,c);
+} // end of equi_tri
 	
 /* draw a circle given a coordinate x,y and radius both filled and non filled.
  *
