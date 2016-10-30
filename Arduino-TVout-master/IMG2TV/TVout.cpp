@@ -570,6 +570,57 @@ void TVout::equi_tri(uint8_t x, uint8_t y, uint8_t s, char c, char fc) {
 	draw_line(x2,y2,x3,y3,c);
 	draw_line(x1,y1,x3,y3,c);
 } // end of equi_tri
+
+/* hallway_effect: draw a series of triangles to add a 'hallway' perspective
+ * 
+ * Arguments:
+ *	x,y:
+ *		The x,y coordinates of centerpoint of the main equi triangle
+ *    
+ *      s:      The length of sides of the main equilateral triangle
+ *		All other triangles will use a fraction of this for their side length
+ *
+ *      p:      Perspective ratio. How far each triangle is from eachother.
+ *
+ *	c:	The color of the triange lines.
+ *		
+ *	fc:
+ *		The fill color of the triangle..not sure how to do this yet
+*/
+void TVout::hallway_effect(uint8_t x, uint8_t y, uint8_t s, uint8_t p, char c, char fc) {
+	x1 = x+(p*(s/2));
+	x2 = x1+(p*(s/2));
+	x3 = x2+(p*(s/2));
+	x4 = x3+(p*(s/2));
+	x5 = x4+(p*(s/2));
+	
+	y1 = y+(p*(s/2));
+	y2 = y1+(p*(s/2));
+	y3 = y2+(p*(s/2));
+	y4 = y3+(p*(s/2));
+	y5 = y4+(p*(s/2));
+		
+	s1 = s*.75;
+	s2 = s1*.75;
+	s3 = s2*.75;
+	s4 = s3*.75;
+	s5 = s4*.75;
+	
+	int dtime = 50;
+	
+	equi_tri(x, y, s, c, fc);
+	delay(dtime);
+	equi_tri(x1, y1, s1, c, fc);
+	delay(dtime);
+	equi_tri(x1, y1, s1, c, fc);
+	delay(dtime);
+	equi_tri(x1, y1, s1, c, fc);
+	delay(dtime);
+	equi_tri(x1, y1, s1, c, fc);
+	delay(dtime);
+	equi_tri(x1, y1, s1, c, fc);
+	delay(dtime);
+}	
 	
 /* draw a circle given a coordinate x,y and radius both filled and non filled.
  *
