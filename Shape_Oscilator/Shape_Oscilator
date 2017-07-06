@@ -1,0 +1,150 @@
+#include <TVout.h>
+#include <video_gen.h>
+
+#include "TVout.h"
+#include <fontALL.h>
+
+TVout TV;
+
+long time = 0;         // the last time the output pin was toggled
+long debounce = 200;   // the debounce time, increase if the output flickers
+
+//Definie button variables
+int shapePin    = 2;
+int amntPin     = 3;
+int movementPin = 4;
+
+
+int shp   = 1;
+int amnt  = 1;
+int mvmt = 1;
+int spd   = analogRead(A0); //use 10k pot - Values should be 0 - 1023
+
+//Definte the environment we're playing in
+int TV_width = 150;
+int TV_height = 90;
+
+
+
+void setup() {
+  //Initialize buttons
+  pinMode(shapePin, INPUT_PULLUP);  //toggle thru dots, lines, angles, dub-angles
+  pinMode(amntPin, INPUT_PULLUP);   //amount of dots
+  pinMode(movementPin, INPUT_PULLUP);
+  
+  
+  TV.begin(NTSC,120,96); //Screen resolution
+  Serial.begin(9600);
+  TV.clear_screen(); 
+
+}
+
+void loop() {
+int shape_read = digitalRead(shapePin);
+int amnt_read = digitalRead(amntPin);
+int movement_read = digitalRead(movementPin);
+int spd   = analogRead(A0); 
+
+
+//SHAPE BUTTON LOGIC - 4 Different 'shapes'
+if (shape_read == LOW &&  millis() - time > debounce) {
+    if (shp == 1)
+         shp = 2;
+    else if (shp == 2)
+         shp = 3;
+    else if (shp == 3)
+         shp = 4;
+         else       //if shp = 4
+         shp = 1;  
+    time = millis(); 
+    }
+
+//AMOUNT BUTTON LOGIC - 4 Different 'amounts'
+if (amnt_read == LOW &&  millis() - time > debounce) {
+    if (amnt == 1)
+         amnt = 2;
+    else if (amnt == 2)
+         amnt = 3;
+    else if (amnt == 3)
+         amnt = 4;
+         else       //if shp = 4
+         amnt = 1;  
+    time = millis(); 
+    }
+
+
+
+//MOVEMENT BUTTON LOGIC - 4 Different 'movement types'
+if (movement_read == LOW &&  millis() - time > debounce) {
+    if  (mvmt == 1)
+         mvmt = 2;
+    else if (mvmt == 2)
+         mvmt = 3;
+    else if (mvmt == 3)
+         mvmt = 4;
+    else       //if mvmt = 4
+         mvmt = 1;  
+    time = millis(); 
+    }   
+  
+
+delay(1000);
+
+Serial.print(shp);    
+Serial.print("\t");    // prints a tab
+Serial.print(amnt);    
+Serial.print("\t");       
+Serial.print(mvmt);    
+Serial.print("\t");
+Serial.print(spd);    
+Serial.print("\t");     
+Serial.println(" ");   // return
+
+//MAKE DOTS  --- Can make additional dots by adding / subtracting random values to these baseline points
+uint8_t x1 = random (20,80);
+uint8_t x2 = random (20,80);
+uint8_t x3 = random (20,80);
+uint8_t x4 = random (20,80);
+uint8_t x5 = random (20,80);
+uint8_t y1 = random (20,80);
+uint8_t y2 = random (20,80);
+uint8_t y3 = random (20,80);
+uint8_t y4 = random (20,80);
+uint8_t y5 = random (20,80);
+
+
+TV.set_pixel(x1,y1,WHITE);
+TV.set_pixel(x1,y2,WHITE);
+TV.set_pixel(x2,y1,WHITE);
+TV.set_pixel(x2,y2,WHITE);
+
+//MAKE DOTS MOVE
+//If x is less that half TV width, make x go left (away from center) and vice versa
+//If y is less that half TV height, make y go down (away from center) and vice versa
+/*
+while (i < 440) {       
+         x1 = x1+(3*xm);
+         x2 = x2+(4*xm);
+         x3 = x3+(5*xm);
+         x4 = x4+(6*xm);
+         x5 = x5+(7*xm);
+         if (x5<= 14 || x5>=60) {xm = -xm;} 
+            
+         
+         y2 = y2+ym;
+         y3 = y3+(2*ym);
+         y4 = y4+(3*ym);
+         y5 = y5+(4*ym); 
+         if (y5<= 14 || y5>=80) {ym = -ym;}   
+         
+         draw_pixels(x1, x2, x3, x4, x5,y1, y2, y3, y4, y5);
+         i++;
+         Serial.println(i); 
+      }
+*/
+//REGENERATE DOTS THAT HAVE LEFT US
+//If x is <= 0 OR >= TV_width, generate a new dot
+//IF y is <= 0 OR >= TV_height, generate a new dot
+
+TV.clear_screen(); 
+}
