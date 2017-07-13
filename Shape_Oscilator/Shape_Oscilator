@@ -14,15 +14,22 @@ int shapePin    = 2;
 int amntPin     = 3;
 int movementPin = 4;
 
-
+//Define states of Shape, Amount of Dots, Type of Movement
 int shp   = 1;
 int amnt  = 1;
 int mvmt = 1;
 int spd   = analogRead(A0); //use 10k pot - Values should be 0 - 1023
 
-//Definte the environment we're playing in
-int TV_width = 150;
-int TV_height = 90;
+//Define the environment we're playing in
+int TV_width = 120;
+int TV_height = 96;
+
+//Define dot arrays
+#define AMOUNT_DOTS 20 //20 dots will be generated
+
+int x_dot_array[AMOUNT_DOTS];
+int y_dot_array[AMOUNT_DOTS];
+
 
 
 
@@ -44,6 +51,7 @@ int shape_read = digitalRead(shapePin);
 int amnt_read = digitalRead(amntPin);
 int movement_read = digitalRead(movementPin);
 int spd   = analogRead(A0); 
+int t = 0;
 
 
 //SHAPE BUTTON LOGIC - 4 Different 'shapes'
@@ -88,6 +96,49 @@ if (movement_read == LOW &&  millis() - time > debounce) {
     }   
   
 
+//MAKE DOTS  -- Using the Arrays defined above
+for (int i = 0; i< AMOUNT_DOTS; i++)
+    {
+      int x_rand = random(TV_width);
+      x_dot_array[i] = x_rand;
+      int y_rand = random(TV_height);
+      y_dot_array[i] = y_rand;
+      
+      TV.set_pixel(x_dot_array[i],y_dot_array[i],WHITE); //DRAW THE INITIAL DOTS
+      TV.delay_frame(4); 
+      TV.clear_screen();  
+    }
+
+
+//MAKE DOTS MOVE
+//If x is less that half TV width, make x go left (away from center) and vice versa
+//If y is less that half TV height, make y go down (away from center) and vice versa
+
+while (t < 20) 
+    {   
+      for (int i=0; i< AMOUNT_DOTS; i++) //cycle through array for each 't' step
+         {  
+         x_dot_array[i] = x_dot_array[i]+(1);
+         y_dot_array[i] = y_dot_array[i]+(1);
+         TV.set_pixel(x_dot_array[i],y_dot_array[i],WHITE); //DRAW THE NEWLY MOVED DOTS
+         }
+       
+       t++;
+       TV.delay_frame(4); 
+       TV.clear_screen();    
+      }
+
+
+
+//REGENERATE DOTS THAT HAVE LEFT US
+//If x is <= 0 OR >= TV_width, generate a new dot
+//IF y is <= 0 OR >= TV_height, generate a new dot
+
+TV.delay_frame(4); 
+TV.clear_screen();  
+}
+
+/* SERIAL STUFF
 delay(1000);
 
 Serial.print(shp);    
@@ -99,30 +150,10 @@ Serial.print("\t");
 Serial.print(spd);    
 Serial.print("\t");     
 Serial.println(" ");   // return
+*/
 
-//MAKE DOTS  --- Can make additional dots by adding / subtracting random values to these baseline points
-uint8_t x1 = random (20,80);
-uint8_t x2 = random (20,80);
-uint8_t x3 = random (20,80);
-uint8_t x4 = random (20,80);
-uint8_t x5 = random (20,80);
-uint8_t y1 = random (20,80);
-uint8_t y2 = random (20,80);
-uint8_t y3 = random (20,80);
-uint8_t y4 = random (20,80);
-uint8_t y5 = random (20,80);
-
-
-TV.set_pixel(x1,y1,WHITE);
-TV.set_pixel(x1,y2,WHITE);
-TV.set_pixel(x2,y1,WHITE);
-TV.set_pixel(x2,y2,WHITE);
-
-//MAKE DOTS MOVE
-//If x is less that half TV width, make x go left (away from center) and vice versa
-//If y is less that half TV height, make y go down (away from center) and vice versa
-/*
-while (i < 440) {       
+/* OLD SQUARE DOTS MOVEMENT CODE
+ *    while (i < 440) {       
          x1 = x1+(3*xm);
          x2 = x2+(4*xm);
          x3 = x3+(5*xm);
@@ -140,11 +171,6 @@ while (i < 440) {
          draw_pixels(x1, x2, x3, x4, x5,y1, y2, y3, y4, y5);
          i++;
          Serial.println(i); 
-      }
-*/
-//REGENERATE DOTS THAT HAVE LEFT US
-//If x is <= 0 OR >= TV_width, generate a new dot
-//IF y is <= 0 OR >= TV_height, generate a new dot
+      
+ */
 
-TV.clear_screen(); 
-}
