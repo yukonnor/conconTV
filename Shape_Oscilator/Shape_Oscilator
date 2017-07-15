@@ -110,27 +110,45 @@ for (int i = 0; i< AMOUNT_DOTS; i++)
     }
 
 
-//MAKE DOTS MOVE
-//If x is less that half TV width, make x go left (away from center) and vice versa
-//If y is less that half TV height, make y go down (away from center) and vice versa
-
+//MAKE DOTS MOVE - MOVEMENT TYPE #1
+//ALSO: REGENERATE DOTS THAT HAVE LEFT US
 while (t < 20) 
     {   
       for (int i=0; i< AMOUNT_DOTS; i++) //cycle through array for each 't' step
          {
-          if  (x_dot_array[i] < (TV_width/2)) 
+          // x coordinates!
+          if  (x_dot_array[i] < (TV_width/2))        //If x is less that halfway, move left
               {x_dot_array[i] = x_dot_array[i]-1;}
           
-          if  (x_dot_array[i] > (TV_width/2)) 
+          if  (x_dot_array[i] > (TV_width/2))        //If x is more tha halfway, move right
               {x_dot_array[i] = x_dot_array[i]+1;}
 
-           if (y_dot_array[i] < (TV_height/2)) 
-              {y_dot_array[i] = y_dot_array[i]-1;}
+          if  (x_dot_array[i] <= (0))                 //If x is <= 0, generate a new dot
+              {x_dot_array[i] = random(TV_width);
+               y_dot_array[i] = random(TV_height);} 
+
+          if  (x_dot_array[i] >= (TV_width))           //If x is >= TV_width, generate a new dot
+              {x_dot_array[i] = random(TV_width);
+               y_dot_array[i] = random(TV_height);} 
+
+
+          // y coordinates!
+          if (y_dot_array[i] < (TV_height/2)) 
+             {y_dot_array[i] = y_dot_array[i]-1;}
           
-          if  (y_dot_array[i][i] > (TV_height/2)) 
-              {y_dot_array[i][i] = y_dot_array[i]+1;}
-        
-         TV.set_pixel(x_dot_array[i],y_dot_array[i],WHITE); //DRAW THE NEWLY MOVED DOTS
+          if  (y_dot_array[i] > (TV_height/2)) 
+              {y_dot_array[i] = y_dot_array[i]+1;}
+
+          if  (y_dot_array[i] <= (0))                   //If y is <= 0, generate a new dot
+              {x_dot_array[i] = random(TV_width);
+               y_dot_array[i] = random(TV_height);}  
+
+          if  (y_dot_array[i] >= (TV_height))           //If y is >= TV_height, generate a new dot
+              {x_dot_array[i] = random(TV_width);
+               y_dot_array[i] = random(TV_height);} 
+
+    
+         TV.set_pixel(x_dot_array[i],y_dot_array[i],WHITE);  //Now draw the newly moved or newly generated dots
          }
        
        t++;
@@ -139,10 +157,6 @@ while (t < 20)
       }
 
 
-//REGENERATE DOTS THAT HAVE LEFT US
-//Will need to somehow put in the MAKE DOTS MOVE section
-//If x is <= 0 OR >= TV_width, generate a new dot
-//IF y is <= 0 OR >= TV_height, generate a new dot
 
 TV.delay_frame(4); 
 TV.clear_screen();  
