@@ -9,6 +9,7 @@
  *                          --->If x,y(>10s) is greater than x,y(ymax<10s), set pixel to black
  *        - clear after time based on pot value (map range 1s - 20s)
  *  NOTE: this sketch is called "Wiping Shape Snake" on the computer.
+ *  NOTE: videos of sketch made on: 1/20/18
  */
 
 #include <TVout.h>
@@ -113,66 +114,9 @@ void loop() {
 }
 
 
-
-
-void hallway_effect (uint8_t x, uint8_t y, uint8_t s, float p, char c, char fc) {
-  uint8_t REPEATS = 8;
-  float ratio = .75;
-
-  //set up arrays for 'copies' of original shape
-  uint8_t xr[REPEATS];
-  uint8_t sr[REPEATS];
-  uint8_t yr[REPEATS];
-  
-  uint8_t  i;       // counter
-
-  //distance x & y move
-  int8_t xm = 1;
-  int8_t ym = 1; 
-
-  // Draw  repeating triangles
-  //for (i=0; i<REPEATS; i++) {
-      for (int j=0; j<50; j++)//while (animation_mode == 1) 
-      {
-         //draw light triangles in old position (trails behind black triangle)
-         equi_tri(x,y,s,c,fc);
-         
-         x = x + xm;  //move x left or right
-         if (x<=(s/2) || x>(TV.hres()-1)-(s/2)-1) xm = -xm; //if x hits edge, reverse direction
-                                                            //subtr. 1 from hres as it was going out of screen
-         y = y + ym;  //move y up or down
-         if (y<=(s/2) || y>=TV.vres()-(s/2)-1) ym = -ym; //if y hits edge, reverse direction
-      
-         //draw black triangle in new position on top, moving above its tail
-         equi_tri(x,y,s,WHITE,BLACK);
-         TV.delay_frame(1);
-      } 
-    //  }
-
-} //end hallway_effect 
-
-
 /*
- *    x,y is center point of triange. Halfway x and y directions
- *    if s is 2, 
- *    
- *          for (int j=0; j<100; j++)//while (animation_mode == 1) 
-      {
-         //draw light triangles in old position (trails behind black triangle)
-         equi_tri(x,y,s,c,fc);
-
-         xr[i] = xr[i] + xm[i];
-         if (xr[i]<=(sr[i]/2) || xr[i]>TV.hres()-(sr[i]/2)-1) xm[i] = -xm[i];
-       
-         yr[i] = yr[i] + ym[i];
-         if (yr[i]<=(sr[i]/2) || yr[i]>=TV.vres()-(sr[i]/2)-1) ym[i] = -ym[i];
-      
-         //draw black triangle in new position on top, moving above its tail
-         equi_tri(x,y,s,BLACK,BLACK);
-
-         Serial.print('j = ');
-         Serial.println(j);
-      } 
+ *   equilateral triangle notes: 
+ *   x,y is center point of triange. Halfway x and y directions
  */
 void equi_tri(uint8_t x, uint8_t y, uint8_t s, char c, char fc) {
   //1=bottom right
