@@ -8,8 +8,7 @@
  *          ---> Clear pixels older than 10s that have NOT been covered by pixel drawn <10s ago
  *                          --->If x,y(>10s) is greater than x,y(ymax<10s), set pixel to black
  *        - clear after time based on pot value (map range 1s - 20s)
- *  NOTE: this sketch is called "Wiping Shape Snake" on the computer.
- *  NOTE: videos of sketch made on: 1/20/18
+ * 
  */
 
 #include <TVout.h>
@@ -43,6 +42,12 @@ int button4 = 0;
 long time = 0;         // the last time the output pin was toggled
 long debounce = 200;   // the debounce time, increase if the output flickers
 
+//Define Shape Location & Size Variables
+uint8_t x; //x loction
+uint8_t y; //y location
+uint8_t s; //size of sides
+int8_t xm; //x movement distance
+int8_t ym; //y movement distance
 
 //define 'fill' variable values
 const int NO_FILL = -1;
@@ -64,7 +69,19 @@ void setup() {
   //Set button pins to use internal Pullup resistors
   pinMode(button1Pin, INPUT_PULLUP);
   
-  TV.clear_screen();     
+  TV.clear_screen();    
+
+  //velocity and direction x & y move
+  xm = random(-1,1);
+  ym = random(-1,1); 
+    //remove 0s
+    if (xm == 0) {xm=1;}
+    if (ym == 0) {ym=1;}
+
+  //set initial location and size of triange
+  x = random(35,80); //Should be between 35 and 85  
+  y = random(35,60); //Should be between 30 and 66
+  s = 50; //side length aka size of triange  
 }
 
 void loop() {
@@ -78,30 +95,28 @@ void loop() {
   //record values of buttons
   int buttonRead1 = digitalRead(button1Pin); //clear screen button
 
-  //distance x & y move
-  int8_t xm = random(-1,1);
-  int8_t ym = random(-1,1); 
-  //remove 0s
-  if (xm == 0) {xm=1;}
-  if (ym == 0) {ym=1;}
-  
-  //set initial location and size of triange
-  uint8_t x = random(35,80); //Should be between 35 and 85  
-  uint8_t y = random(35,60); //Should be between 30 and 66
-  uint8_t s = 50; //side length aka size of triange  
-
+  //map pot1 values from 10 to 100 
+  //controls tail length
   potRead1 = map(potRead1,0,1023,10,100);
 
+  //map pot2 values from 1 to 3
+  //controls x speed
+  potRead2 = map(potRead2,0,1023,1,3);
+
+  //map pot3 values from 1 to 3
+  //controls y speed
+  potRead3 = map(potRead3,0,1023,1,3);
+  
   // Draw  repeating triangles
   for (int j=0; j<potRead1; j++) //j is how long the 'tail' goes for until it starts over 
   {
      //draw light triangles in old position (trails behind black triangle)
      equi_tri(x,y,s,WHITE,BLACK);
      
-     x = x + xm;  //move x left or right
+     x = x + (xm*potRead2);  //move x left or right
      if (x<=(s/2) || x>(TV.hres()-1)-(s/2)-1) xm = -xm; //if x hits edge, reverse direction
                                                         //subtr. 1 from hres as it was going out of screen
-     y = y + ym;  //move y up or down
+     y = y + (ym*potRead3);  //move y up or down
      if (y<=(s/2) || y>=TV.vres()-(s/2)-1) ym = -ym; //if y hits edge, reverse direction
   
      //draw black triangle in new position on top, moving above its tail
@@ -114,9 +129,29 @@ void loop() {
 }
 
 
+
+
 /*
- *   equilateral triangle notes: 
- *   x,y is center point of triange. Halfway x and y directions
+ *    x,y is center point of triange. Halfway x and y directions
+ *    if s is 2, 
+ *    
+ *          for (int j=0; j<100; j++)//while (animation_mode == 1) 
+      {
+         //draw light triangles in old position (trails behind black triangle)
+         equi_tri(x,y,s,c,fc);
+
+         xr[i] = xr[i] + xm[i];
+         if (xr[i]<=(sr[i]/2) || xr[i]>TV.hres()-(sr[i]/2)-1) xm[i] = -xm[i];
+       
+         yr[i] = yr[i] + ym[i];
+         if (yr[i]<=(sr[i]/2) || yr[i]>=TV.vres()-(sr[i]/2)-1) ym[i] = -ym[i];
+      
+         //draw black triangle in new position on top, moving above its tail
+         equi_tri(x,y,s,BLACK,BLACK);
+
+         Serial.print('j = ');
+         Serial.println(j);
+      } 
  */
 void equi_tri(uint8_t x, uint8_t y, uint8_t s, char c, char fc) {
   //1=bottom right
