@@ -41,11 +41,22 @@ void draw_cursor (int x, int y) {
   }
 }
 
+// Fills the buffer with what the cursor covered so that you can redraw later
 void fill_cursor_buffer (int x, int y) {
   for(int i = 0; i<cursor_size; i++){
     for(int j = 0; j<cursor_size; j++) {
       //fill cursor buffer
       cursor_buffer[i][j] = VGA.getPPixelFast(x-4+i,y-4+j);
+    }
+  }
+}
+
+// Redraws what the cursor was placed over 
+void dump_cursor_buffer (int x, int y) {
+  for(int i = 0; i<cursor_size; i++){
+    for(int j = 0; j<cursor_size; j++) {
+      //draw cursor buffer
+      VGA.putPPixelFast(x-4+i,y-4+j,cursor_buffer[i][j]);
     }
   }
 }
