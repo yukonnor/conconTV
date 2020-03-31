@@ -29,6 +29,26 @@ int cursor_1[9][9] = {
 
 // store what the cursor covered so that you can redraw it once the cursor moves
 int cursor_buffer[9][9];
+
+void draw_cursor (int x, int y) {
+  // horizontal
+  for(int i = 0; i<cursor_size; i++){
+    // vertical
+    for(int j = 0; j<cursor_size; j++) {
+      //draw cursor
+      VGA.drawPixel(x-4+i,y-4+j,cursor_1[i][j]);
+    }
+  }
+}
+
+void fill_cursor_buffer (int x, int y) {
+  for(int i = 0; i<cursor_size; i++){
+    for(int j = 0; j<cursor_size; j++) {
+      //fill cursor buffer
+      cursor_buffer[i][j] = VGA.getPPixelFast(x-4+i,y-4+j);
+    }
+  }
+}
 ```
 In the code, fill the buffer where you want to fil
 
